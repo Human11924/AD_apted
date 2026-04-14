@@ -62,6 +62,17 @@ a {
 	color: var(--muted);
 }
 
+.dashboard-warm-bg {
+	background:
+		radial-gradient(circle at 10% 12%, rgba(243, 190, 41, 0.14), transparent 34%),
+		radial-gradient(circle at 92% 0%, rgba(60, 42, 32, 0.1), transparent 38%),
+		var(--bg);
+}
+
+.dashboard-warm-panel {
+	background: rgba(252, 248, 242, 0.92);
+}
+
 .glass {
 	background: rgba(252, 248, 242, 0.82);
 	backdrop-filter: blur(8px);
