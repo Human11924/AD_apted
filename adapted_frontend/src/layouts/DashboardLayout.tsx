@@ -89,6 +89,28 @@ export function DashboardLayout() {
           </div>
         </header>
 
+        <div className="border-b border-[var(--line)] bg-white md:hidden">
+          <nav className="flex gap-2 overflow-x-auto px-4 py-2">
+            {nav.map((item) => {
+              const active = pathname === item.to || pathname.startsWith(`${item.to}/`);
+
+              return (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                    active
+                      ? "bg-blue-50 text-[var(--primary)]"
+                      : "bg-slate-100 text-[var(--muted)] hover:bg-slate-200"
+                  }`}
+                >
+                  {item.label}
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+
         <main className="p-4 md:p-6">
           <Outlet />
         </main>
