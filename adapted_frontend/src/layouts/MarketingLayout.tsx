@@ -3,6 +3,8 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { Instagram, Mail, Menu, Phone, X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useI18n } from "@/i18n/I18nProvider";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -13,6 +15,7 @@ const nav = [
 
 export function MarketingLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen">
@@ -33,11 +36,12 @@ export function MarketingLayout() {
                   )
                 }
               >
-                {item.label}
+                {t(item.label)}
               </NavLink>
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <button
               type="button"
               className="inline-flex rounded-full p-2 text-[var(--accent)] transition hover:bg-[#fff3d6] md:hidden"
@@ -51,10 +55,10 @@ export function MarketingLayout() {
               to="/login"
               className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-[var(--accent)] transition duration-200 hover:border hover:border-[#e8cb86] hover:bg-[#fff3d6] hover:text-[#6c4a10] md:inline-block"
             >
-              Log in
+              {t("Log in")}
             </Link>
             <Link to="/register-by-code">
-              <Button size="sm">Join by Access Code</Button>
+              <Button size="sm">{t("Join by Access Code")}</Button>
             </Link>
           </div>
         </div>
@@ -74,7 +78,7 @@ export function MarketingLayout() {
                     )
                   }
                 >
-                  {item.label}
+                  {t(item.label)}
                 </NavLink>
               ))}
               <div className="mt-1 grid grid-cols-2 gap-2">
@@ -83,11 +87,11 @@ export function MarketingLayout() {
                   onClick={() => setMobileOpen(false)}
                   className="inline-flex items-center justify-center rounded-xl border border-[#e8cb86] px-3 py-2 text-sm font-medium text-[#6c4a10]"
                 >
-                  Log in
+                  {t("Log in")}
                 </Link>
                 <Link to="/register-by-code" onClick={() => setMobileOpen(false)}>
                   <Button size="sm" className="w-full">
-                    Join
+                    {t("Join")}
                   </Button>
                 </Link>
               </div>
@@ -110,23 +114,23 @@ export function MarketingLayout() {
           </div>
           <div className="grid gap-2">
             <Link to="/" className="text-white/80 underline-offset-4 transition duration-200 hover:translate-x-0.5 hover:text-[#f3be29] hover:underline">
-              Home
+              {t("Home")}
             </Link>
             <Link
               to="/pricing"
               className="text-white/80 underline-offset-4 transition duration-200 hover:translate-x-0.5 hover:text-[#f3be29] hover:underline"
             >
-              Pricing
+              {t("Pricing")}
             </Link>
             <Link
               to="/contact"
               className="text-white/80 underline-offset-4 transition duration-200 hover:translate-x-0.5 hover:text-[#f3be29] hover:underline"
             >
-              Send Request
+              {t("Send Request")}
             </Link>
           </div>
           <div className="grid gap-3 md:justify-self-end">
-            <p className="text-base font-semibold">Contact Us</p>
+            <p className="text-base font-semibold">{t("Contact Us")}</p>
             <a
               href="mailto:join.adapted@gmail.com"
               className="inline-flex items-center gap-2 text-white/80 underline-offset-4 transition duration-200 hover:translate-x-0.5 hover:text-[#f3be29] hover:underline"

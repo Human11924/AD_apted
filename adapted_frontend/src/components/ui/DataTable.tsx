@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useI18n } from "@/i18n/I18nProvider";
 
 interface Column<T> {
   key: string;
@@ -12,6 +13,8 @@ interface Props<T> {
 }
 
 export function DataTable<T>({ columns, data }: Props<T>) {
+  const { t } = useI18n();
+
   return (
     <div className="overflow-hidden rounded-2xl border border-[var(--line)] bg-white">
       <div className="overflow-x-auto">
@@ -20,7 +23,7 @@ export function DataTable<T>({ columns, data }: Props<T>) {
             <tr>
               {columns.map((column) => (
                 <th key={column.key} className="px-4 py-3 font-medium">
-                  {column.header}
+                  {t(column.header)}
                 </th>
               ))}
             </tr>

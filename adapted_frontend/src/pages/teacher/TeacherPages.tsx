@@ -9,8 +9,10 @@ import { Input } from "@/components/ui/Input";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { useCreateTeacherCourse, useTeacherCourses, useTeacherGroupProgress, useTeacherGroups } from "@/hooks/queries/useTeacherQueries";
+import { useI18n } from "@/i18n/I18nProvider";
 
 export function TeacherDashboardPage() {
+  const { t } = useI18n();
   const groupsQuery = useTeacherGroups();
   const coursesQuery = useTeacherCourses();
   const groups = groupsQuery.data ?? [];
@@ -45,6 +47,7 @@ export function TeacherDashboardPage() {
 }
 
 export function TeacherGroupsPage() {
+  const { t } = useI18n();
   const groupsQuery = useTeacherGroups();
   const groups = groupsQuery.data ?? [];
 
@@ -53,12 +56,12 @@ export function TeacherGroupsPage() {
       <PageHeader title="Assigned Groups" description="Groups where you lead sessions and mentor students." />
       <div className="grid gap-4">
         {groups.map((group) => (
-          <Card key={group.group_id} title={group.group_name} subtitle={`${group.course_title} · ${group.students_count} students`}>
+          <Card key={group.group_id} title={group.group_name} subtitle={`${group.course_title} · ${group.students_count} ${t("students")}`}>
             <ProgressBar value={group.students_count > 0 ? 70 : 0} />
             <div className="mt-4">
               <Link to={`/teacher/groups/${group.group_id}`}>
                 <Button size="sm" variant="secondary">
-                  Open Group
+                  {t("Open Group")}
                 </Button>
               </Link>
             </div>
@@ -98,6 +101,7 @@ export function TeacherGroupDetailsPage() {
 }
 
 export function TeacherCourseStructurePage() {
+  const { t } = useI18n();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [level, setLevel] = useState("A2");
@@ -135,18 +139,18 @@ export function TeacherCourseStructurePage() {
           <Input label="Description" value={description} onChange={(event) => setDescription(event.target.value)} />
           <div className="md:col-span-2">
             <Button type="submit" disabled={createCourse.isPending}>
-              {createCourse.isPending ? "Creating..." : "Create Course"}
+              {createCourse.isPending ? t("Creating...") : t("Create Course")}
             </Button>
           </div>
-          {createCourse.isError ? <p className="text-sm text-[var(--danger)] md:col-span-2">Course creation failed.</p> : null}
-          {createCourse.isSuccess ? <p className="text-sm text-emerald-700 md:col-span-2">Course created successfully.</p> : null}
+          {createCourse.isError ? <p className="text-sm text-[var(--danger)] md:col-span-2">{t("Course creation failed.")}</p> : null}
+          {createCourse.isSuccess ? <p className="text-sm text-emerald-700 md:col-span-2">{t("Course created successfully.")}</p> : null}
         </form>
       </Card>
       <div className="grid gap-4 md:grid-cols-2">
         {(coursesQuery.data ?? []).slice(0, 4).map((course, index) => (
-          <Card key={course.course_id} title={course.title} subtitle={`${course.level} · ${course.duration_weeks} weeks`}>
-              <p className="text-sm adapted-muted">Focus: Scenario-based speaking and service confidence.</p>
-              <Badge tone={index < 2 ? "success" : "neutral"}>{index < 2 ? "In progress" : "Upcoming"}</Badge>
+          <Card key={course.course_id} title={course.title} subtitle={`${course.level} · ${course.duration_weeks} ${t("weeks")}`}>
+              <p className="text-sm adapted-muted">{t("Focus: Scenario-based speaking and service confidence.")}</p>
+              <Badge tone={index < 2 ? "success" : "neutral"}>{index < 2 ? t("In progress") : t("Upcoming")}</Badge>
             </Card>
           ))}
       </div>
@@ -155,6 +159,7 @@ export function TeacherCourseStructurePage() {
 }
 
 export function TeacherStudentProgressPage() {
+  const { t } = useI18n();
   const groupsQuery = useTeacherGroups();
   const selectedGroupId = groupsQuery.data?.[0]?.group_id;
   const progressQuery = useTeacherGroupProgress(selectedGroupId);
@@ -163,7 +168,7 @@ export function TeacherStudentProgressPage() {
     const risk = item.progress_percent < 45 ? "high" : item.progress_percent < 75 ? "low" : "none";
     return {
       student: item.full_name,
-      module: `Completed ${item.lessons_completed}/${item.total_lessons} lessons`,
+      module: `${t("Completed")} ${item.lessons_completed}/${item.total_lessons} ${t("lessons")}`,
       completion: item.progress_percent,
       risk,
     };
@@ -182,7 +187,7 @@ export function TeacherStudentProgressPage() {
             {
               key: "risk",
               header: "Risk",
-              render: (row) => <Badge tone={row.risk === "high" ? "warning" : row.risk === "low" ? "info" : "success"}>{row.risk}</Badge>,
+              render: (row) => <Badge tone={row.risk === "high" ? "warning" : row.risk === "low" ? "info" : "success"}>{t(row.risk)}</Badge>,
             },
           ]}
         />

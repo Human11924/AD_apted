@@ -13,6 +13,7 @@ import {
   Users as IconUsers,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useI18n } from "@/i18n/I18nProvider";
 
 import "./LandingPage.css";
 
@@ -26,30 +27,32 @@ function Container({ className = "", children }: ContainerProps) {
 }
 
 export function LandingPage() {
+  const { t } = useI18n();
+
   return (
     <main className="home">
       <section className="homeHero" aria-label="Hero">
         <Container className="homeHero__inner">
           <div className="homeHero__copy">
             <h1 className="homeHero__title">
-              <span className="homeHero__titleLine">Customized trainings.</span>
-              <span className="homeHero__titleLine">Effective results.</span>
+              <span className="homeHero__titleLine">{t("Customized trainings.")}</span>
+              <span className="homeHero__titleLine">{t("Effective results.")}</span>
             </h1>
 
-            <div className="homeHero__kicker">Transform Your Team&apos;s English Skills</div>
+            <div className="homeHero__kicker">{t("Transform Your Team's English Skills")}</div>
 
             <p className="homeHero__desc">
-              Customizable English courses designed for businesses.
+              {t("Customizable English courses designed for businesses.")}
               <br />
-              Choose from ready-made industry-specific programs or create tailored courses.
+              {t("Choose from ready-made industry-specific programs or create tailored courses.")}
             </p>
 
             <div className="homeHero__actions">
               <Link className="homeBtn homeBtn--primary" to="/contact">
-                Send Request
+                {t("Send Request")}
               </Link>
               <Link className="homeBtn homeBtn--secondary" to="/pricing">
-                View Pricing
+                {t("View Pricing")}
               </Link>
             </div>
           </div>
@@ -61,7 +64,7 @@ export function LandingPage() {
               </span>
               <div className="homeHero__statText">
                 <div className="homeHero__statTitle">20+</div>
-                <div className="homeHero__statSub">Online Courses</div>
+                <div className="homeHero__statSub">{t("Online Courses")}</div>
               </div>
             </div>
 
@@ -70,8 +73,8 @@ export function LandingPage() {
                 <IconUsers className="homeHero__svg" />
               </span>
               <div className="homeHero__statText">
-                <div className="homeHero__statTitle">Unlimited</div>
-                <div className="homeHero__statSub">Team Members per Course</div>
+                <div className="homeHero__statTitle">{t("Unlimited")}</div>
+                <div className="homeHero__statSub">{t("Team Members per Course")}</div>
               </div>
             </div>
 
@@ -80,8 +83,8 @@ export function LandingPage() {
                 <IconCheck className="homeHero__svg" />
               </span>
               <div className="homeHero__statText">
-                <div className="homeHero__statTitle">5 levels</div>
-                <div className="homeHero__statSub">From Beginner to Advanced</div>
+                <div className="homeHero__statTitle">{t("5 levels")}</div>
+                <div className="homeHero__statSub">{t("From Beginner to Advanced")}</div>
               </div>
             </div>
           </aside>
@@ -91,11 +94,11 @@ export function LandingPage() {
       <section className="homeWhy" aria-label="Why Choose AdaptEd">
         <Container className="homeWhy__inner">
           <div className="homeWhy__head">
-            <h2 className="homeWhy__title">Why Choose AdaptEd?</h2>
+            <h2 className="homeWhy__title">{t("Why Choose AdaptEd?")}</h2>
             <p className="homeWhy__subtitle">
-              Everything you need to upskill your team&apos;s English proficiency in one
+              {t("Everything you need to upskill your team's English proficiency in one")}
               <br />
-              comprehensive platform.
+              {t("comprehensive platform.")}
             </p>
           </div>
 
@@ -104,9 +107,9 @@ export function LandingPage() {
               <div className="homeWhyCard__icon homeWhyCard__icon--gold" aria-hidden="true">
                 <IconBook className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">Ready-Made Courses</h3>
+              <h3 className="homeWhyCard__title">{t("Ready-Made Courses")}</h3>
               <p className="homeWhyCard__desc">
-                Industry-specific courses like English for Waiters, Front Desk, and Clerks ready to deploy.
+                {t("Industry-specific courses like English for Waiters, Front Desk, and Clerks ready to deploy.")}
               </p>
             </article>
 
@@ -114,17 +117,17 @@ export function LandingPage() {
               <div className="homeWhyCard__icon homeWhyCard__icon--dark" aria-hidden="true">
                 <IconBolt className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">Custom Courses</h3>
-              <p className="homeWhyCard__desc">Tailor courses to your business needs and industry requirements.</p>
+              <h3 className="homeWhyCard__title">{t("Custom Courses")}</h3>
+              <p className="homeWhyCard__desc">{t("Tailor courses to your business needs and industry requirements.")}</p>
             </article>
 
             <article className="homeWhyCard">
               <div className="homeWhyCard__icon homeWhyCard__icon--gold" aria-hidden="true">
                 <IconUsers className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">Team Access</h3>
+              <h3 className="homeWhyCard__title">{t("Team Access")}</h3>
               <p className="homeWhyCard__desc">
-                Enroll any amount of team members per course with secure code access.
+                {t("Enroll any amount of team members per course with secure code access.")}
               </p>
             </article>
 
@@ -132,9 +135,9 @@ export function LandingPage() {
               <div className="homeWhyCard__icon homeWhyCard__icon--dark" aria-hidden="true">
                 <IconClock className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">Flexible Learning</h3>
+              <h3 className="homeWhyCard__title">{t("Flexible Learning")}</h3>
               <p className="homeWhyCard__desc">
-                Choose between online self-paced courses or offline sessions with teachers.
+                {t("Choose between online self-paced courses or offline sessions with teachers.")}
               </p>
             </article>
 
@@ -142,16 +145,16 @@ export function LandingPage() {
               <div className="homeWhyCard__icon homeWhyCard__icon--gold" aria-hidden="true">
                 <IconBulb className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">5 Proficiency Levels</h3>
-              <p className="homeWhyCard__desc">From Beginner to Advanced, courses for every skill level.</p>
+              <h3 className="homeWhyCard__title">{t("5 Proficiency Levels")}</h3>
+              <p className="homeWhyCard__desc">{t("From Beginner to Advanced, courses for every skill level.")}</p>
             </article>
 
             <article className="homeWhyCard">
               <div className="homeWhyCard__icon homeWhyCard__icon--dark" aria-hidden="true">
                 <IconHeadset className="homeWhyCard__svg" />
               </div>
-              <h3 className="homeWhyCard__title">Expert Support</h3>
-              <p className="homeWhyCard__desc">Professional teachers for offline courses and ongoing support.</p>
+              <h3 className="homeWhyCard__title">{t("Expert Support")}</h3>
+              <p className="homeWhyCard__desc">{t("Professional teachers for offline courses and ongoing support.")}</p>
             </article>
           </div>
         </Container>
@@ -161,9 +164,9 @@ export function LandingPage() {
         <Container className="homeHow__inner">
           <div className="homeHow__head">
             <h2 className="homeHow__title">
-              How It <span className="homeHow__titleAccent">Works</span>
+              {t("How It")} <span className="homeHow__titleAccent">{t("Works")}</span>
             </h2>
-            <p className="homeHow__subtitle">Get your team started with AdaptEd in four simple steps.</p>
+            <p className="homeHow__subtitle">{t("Get your team started with AdaptEd in four simple steps.")}</p>
           </div>
 
           <div className="homeHow__steps" role="list" aria-label="Steps">
@@ -176,9 +179,9 @@ export function LandingPage() {
                   1
                 </div>
               </div>
-              <div className="homeHowStep__title">Choose Your Course</div>
+              <div className="homeHowStep__title">{t("Choose Your Course")}</div>
               <div className="homeHowStep__desc">
-                Browse ready-made industry courses or customize your own based on your team&apos;s needs.
+                {t("Browse ready-made industry courses or customize your own based on your team's needs.")}
               </div>
             </div>
 
@@ -191,9 +194,9 @@ export function LandingPage() {
                   2
                 </div>
               </div>
-              <div className="homeHowStep__title">Select Your Plan</div>
+              <div className="homeHowStep__title">{t("Select Your Plan")}</div>
               <div className="homeHowStep__desc">
-                Pick your membership - either online course or offline sessions tailored to your business.
+                {t("Pick your membership - either online course or offline sessions tailored to your business.")}
               </div>
             </div>
 
@@ -206,8 +209,8 @@ export function LandingPage() {
                   3
                 </div>
               </div>
-              <div className="homeHowStep__title">Get Access Code</div>
-              <div className="homeHowStep__desc">Receive a unique code for your team members to access the course.</div>
+              <div className="homeHowStep__title">{t("Get Access Code")}</div>
+              <div className="homeHowStep__desc">{t("Receive a unique code for your team members to access the course.")}</div>
             </div>
 
             <div className="homeHowStep" role="listitem">
@@ -219,9 +222,9 @@ export function LandingPage() {
                   4
                 </div>
               </div>
-              <div className="homeHowStep__title">Start Learning</div>
+              <div className="homeHowStep__title">{t("Start Learning")}</div>
               <div className="homeHowStep__desc">
-                Your team enters the code and begins their English learning journey.
+                {t("Your team enters the code and begins their English learning journey.")}
               </div>
             </div>
           </div>
@@ -231,13 +234,13 @@ export function LandingPage() {
       <section className="homeCta" aria-label="Send Request">
         <Container className="homeCta__inner">
           <h2 className="homeCta__title">
-            Ready to Transform Your Team&apos;s
+            {t("Ready to Transform Your Team's")}
             <br />
-            <span className="homeCta__accent">English Skills</span>?
+            <span className="homeCta__accent">{t("English Skills")}</span>?
           </h2>
-          <p className="homeCta__subtitle">Join businesses that trust AdaptEd for their team&apos;s English learning journey.</p>
+          <p className="homeCta__subtitle">{t("Join businesses that trust AdaptEd for their team's English learning journey.")}</p>
           <Link className="homeCta__btn" to="/contact">
-            Send Request
+            {t("Send Request")}
           </Link>
         </Container>
       </section>

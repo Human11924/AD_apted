@@ -4,9 +4,11 @@ import type { FormEvent } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/i18n/I18nProvider";
 import { applicationsService } from "@/services/api/applicationsService";
 
 export function ContactPage() {
+  const { t } = useI18n();
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +30,7 @@ export function ContactPage() {
 
     const teamSize = Number.parseInt(form.teamSize, 10);
     if (!Number.isFinite(teamSize) || teamSize <= 0) {
-      setError("Team size must be a positive number.");
+      setError(t("Team size must be a positive number."));
       return;
     }
 
@@ -47,9 +49,9 @@ export function ContactPage() {
     } catch (caughtError) {
       if (caughtError instanceof AxiosError) {
         const detail = caughtError.response?.data?.detail;
-        setError(typeof detail === "string" ? detail : "Failed to send request. Please try again.");
+        setError(typeof detail === "string" ? detail : t("Failed to send request. Please try again."));
       } else {
-        setError("Failed to send request. Please try again.");
+        setError(t("Failed to send request. Please try again."));
       }
     } finally {
       setIsSubmitting(false);
@@ -59,54 +61,54 @@ export function ContactPage() {
   return (
     <div className="adapted-container py-14">
       <div className="mx-auto max-w-xl adapted-card p-6 md:p-8">
-        <h1 className="font-brand text-3xl font-semibold tracking-tight">Send Request</h1>
+        <h1 className="font-brand text-3xl font-semibold tracking-tight">{t("Send Request")}</h1>
         <p className="mt-2 text-sm adapted-muted">
-          Tell us about your team and we will design a custom hybrid training rollout.
+          {t("Tell us about your team and we will design a custom hybrid training rollout.")}
         </p>
 
         <form className="mt-6 grid gap-4" onSubmit={submitRequest}>
           <Input
-            label="Your name"
-            placeholder="Enter your name"
+            label={t("Your name")}
+            placeholder={t("Enter your name")}
             value={form.name}
             onChange={(event) => updateField("name", event.target.value)}
             required
           />
           <Input
-            label="Company"
-            placeholder="Enter company name"
+            label={t("Company")}
+            placeholder={t("Enter company name")}
             value={form.company}
             onChange={(event) => updateField("company", event.target.value)}
             required
           />
           <Input
-            label="Work email"
+            label={t("Work email")}
             type="email"
-            placeholder="Enter email address"
+            placeholder={t("Enter email address")}
             value={form.email}
             onChange={(event) => updateField("email", event.target.value)}
             required
           />
           <Input
-            label="Team size"
+            label={t("Team size")}
             type="number"
             min={1}
-            placeholder="Enter team size"
+            placeholder={t("Enter team size")}
             value={form.teamSize}
             onChange={(event) => updateField("teamSize", event.target.value)}
             required
           />
           <Input
-            label="Notes"
-            placeholder="Add your request details"
+            label={t("Notes")}
+            placeholder={t("Add your request details")}
             value={form.notes}
             onChange={(event) => updateField("notes", event.target.value)}
           />
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Sending..." : "Send Request"}
+            {isSubmitting ? t("Sending...") : t("Send Request")}
           </Button>
           {error ? <p className="text-sm text-[var(--danger)]">{error}</p> : null}
-          {sent ? <p className="text-sm text-emerald-700">Thank you. Our team will contact you shortly.</p> : null}
+          {sent ? <p className="text-sm text-emerald-700">{t("Thank you. Our team will contact you shortly.")}</p> : null}
         </form>
       </div>
     </div>

@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/i18n/I18nProvider";
 import { authService } from "@/services/api/authService";
 import { useAuthStore } from "@/store/authStore";
 
 export function RegisterByCodePage() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const [access_code, setAccessCode] = useState("");
@@ -26,9 +28,9 @@ export function RegisterByCodePage() {
   return (
     <div className="adapted-container py-14">
       <div className="mx-auto max-w-lg adapted-card p-6 md:p-8">
-        <h1 className="font-brand text-3xl font-semibold tracking-tight">Register by Access Code</h1>
+        <h1 className="font-brand text-3xl font-semibold tracking-tight">{t("Register by Access Code")}</h1>
         <p className="mt-2 text-sm adapted-muted">
-          Use the code shared by your company to join your training group.
+          {t("Use the code shared by your company to join your training group.")}
         </p>
 
         <form
@@ -38,21 +40,21 @@ export function RegisterByCodePage() {
             mutation.mutate({ access_code, full_name, email, password });
           }}
         >
-          <Input label="Access code" value={access_code} onChange={(event) => setAccessCode(event.target.value)} required />
-          <Input label="Full name" value={full_name} onChange={(event) => setFullName(event.target.value)} required />
-          <Input label="Work email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <Input label={t("Access code")} value={access_code} onChange={(event) => setAccessCode(event.target.value)} required />
+          <Input label={t("Full name")} value={full_name} onChange={(event) => setFullName(event.target.value)} required />
+          <Input label={t("Work email")} type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           <Input
-            label="Password"
+            label={t("Password")}
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
           <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Creating account..." : "Create account"}
+            {mutation.isPending ? t("Creating account...") : t("Create account")}
           </Button>
           {mutation.isError ? (
-            <p className="text-sm text-[var(--danger)]">Could not register by access code. Check code validity and backend availability.</p>
+            <p className="text-sm text-[var(--danger)]">{t("Could not register by access code. Check code validity and backend availability.")}</p>
           ) : null}
         </form>
       </div>

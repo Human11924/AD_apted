@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useI18n } from "@/i18n/I18nProvider";
 import { authService } from "@/services/api/authService";
 import { useAuthStore } from "@/store/authStore";
 import type { Role } from "@/types/auth";
@@ -24,6 +25,7 @@ const demoCredentials: Record<Exclude<Role, "admin" | "teacher">, { email: strin
 export function LoginPage() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,9 +41,9 @@ export function LoginPage() {
     if (!mutation.error) return null;
     if (isAxiosError(mutation.error)) {
       const apiMessage = (mutation.error.response?.data as { detail?: string } | undefined)?.detail;
-      return apiMessage ?? "Login failed. Please check your credentials and try again.";
+      return apiMessage ?? t("Login failed. Please check your credentials and try again.");
     }
-    return "Login failed. Please try again.";
+    return t("Login failed. Please try again.");
   })();
 
   return (
@@ -50,8 +52,8 @@ export function LoginPage() {
         <div className="mb-4 flex justify-center">
           <img src="/logo.svg" alt="AdaptEd" className="h-16 w-auto" />
         </div>
-        <h1 className="font-brand text-3xl font-semibold tracking-tight">Login to AdaptEd</h1>
-        <p className="mt-2 text-sm adapted-muted">Use your workspace credentials.</p>
+        <h1 className="font-brand text-3xl font-semibold tracking-tight">{t("Login to AdaptEd")}</h1>
+        <p className="mt-2 text-sm adapted-muted">{t("Use your workspace credentials.")}</p>
         <form
           className="mt-6 grid gap-4"
           onSubmit={(event) => {
@@ -68,13 +70,13 @@ export function LoginPage() {
             required
           />
           <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Signing in..." : "Sign in"}
+            {mutation.isPending ? t("Signing in...") : t("Sign in")}
           </Button>
           {errorMessage ? <p className="text-sm text-[var(--danger)]">{errorMessage}</p> : null}
         </form>
 
         <div className="mt-6 grid gap-2">
-          <p className="text-xs uppercase tracking-wide adapted-muted">Demo quick-login</p>
+          <p className="text-xs uppercase tracking-wide adapted-muted">{t("Demo quick-login")}</p>
           <div className="grid grid-cols-2 gap-2">
             {(["employer", "student"] as Exclude<Role, "admin" | "teacher">[]).map((role) => (
               <Button

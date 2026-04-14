@@ -16,9 +16,11 @@ import {
   usePronunciationSession,
 } from "@/hooks/queries/useAIQueries";
 import { useStudentGroups, useStudentLessons, useStudentProgress, useUpdateStudentLessonProgress } from "@/hooks/queries/useStudentQueries";
+import { useI18n } from "@/i18n/I18nProvider";
 import { useAuthStore } from "@/store/authStore";
 
 export function StudentDashboardPage() {
+  const { t } = useI18n();
   const groupsQuery = useStudentGroups();
   const progressQuery = useStudentProgress();
   const completed = (progressQuery.data ?? []).filter((item) => item.status === "completed").length;
@@ -33,13 +35,13 @@ export function StudentDashboardPage() {
           <ProgressBar value={percent} />
           <div className="mt-4">
             <Link to="/student/courses/1/lesson/1">
-              <Button size="sm">Continue Learning</Button>
+              <Button size="sm">{t("Continue Learning")}</Button>
             </Link>
           </div>
         </Card>
         <Card title="Streak" subtitle="Consistency this month">
-          <p className="text-4xl font-semibold">12 days</p>
-          <p className="mt-2 text-sm adapted-muted">Keep your momentum with 10-minute lesson blocks during workday breaks.</p>
+          <p className="text-4xl font-semibold">{t("12 days")}</p>
+          <p className="mt-2 text-sm adapted-muted">{t("Keep your momentum with 10-minute lesson blocks during workday breaks.")}</p>
         </Card>
       </div>
     </div>
@@ -47,6 +49,7 @@ export function StudentDashboardPage() {
 }
 
 export function StudentCoursesPage() {
+  const { t } = useI18n();
   const groupsQuery = useStudentGroups();
   const lessonsQuery = useStudentLessons();
   const progressQuery = useStudentProgress();
@@ -68,12 +71,12 @@ export function StudentCoursesPage() {
             <Card key={group.group_id} title={group.course_title} subtitle={group.group_name}>
               <ProgressBar value={percent} />
               <p className="mt-2 text-xs adapted-muted">
-                Completed {completed}/{courseLessons.length} lessons
+                {t("Completed lessons summary").replace("{completed}", String(completed)).replace("{total}", String(courseLessons.length))}
               </p>
             <div className="mt-4">
               <Link to={`/student/courses/${group.course_id}/lesson/1`}>
                 <Button size="sm" variant="secondary">
-                  Open Course
+                  {t("Open Course")}
                 </Button>
               </Link>
             </div>
@@ -86,6 +89,7 @@ export function StudentCoursesPage() {
 }
 
 export function StudentLessonPage() {
+  const { t } = useI18n();
   const lessonsQuery = useStudentLessons();
   const progressQuery = useStudentProgress();
   const updateProgressMutation = useUpdateStudentLessonProgress();
@@ -121,10 +125,10 @@ export function StudentLessonPage() {
             : "Practical scenario: welcoming guests and clarifying requests."
         }
       />
-      <Card title="Lesson Content" subtitle={`Estimated time: ${selectedLesson?.lesson_type === "quiz" ? "10" : selectedLesson?.lesson_type === "dialogue" ? "18" : "12"} minutes`}>
+      <Card title="Lesson Content" subtitle={t("Estimated time minutes").replace("{minutes}", selectedLesson?.lesson_type === "quiz" ? "10" : selectedLesson?.lesson_type === "dialogue" ? "18" : "12")}>
         {courseLessons.length > 0 ? (
           <div className="mb-4 grid gap-2 rounded-xl border border-slate-200 bg-slate-50 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Course Lessons</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{t("Course Lessons")}</p>
             <div className="grid gap-1">
               {courseLessons.map((lesson) => {
                 const lessonStatus = progressQuery.data?.find((item) => item.lesson_id === lesson.lesson_id)?.status;
@@ -139,7 +143,7 @@ export function StudentLessonPage() {
                     }`}
                   >
                     <span>{lesson.lesson_title}</span>
-                    <span className="text-xs adapted-muted">{lessonStatus === "completed" ? "Completed" : lessonStatus === "in_progress" ? "In progress" : "Not started"}</span>
+                    <span className="text-xs adapted-muted">{lessonStatus === "completed" ? t("Completed") : lessonStatus === "in_progress" ? t("In progress") : t("Not started")}</span>
                   </Link>
                 );
               })}
@@ -150,21 +154,21 @@ export function StudentLessonPage() {
         {selectedLesson ? (
           <div className="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Lesson Type</p>
+              <p className="text-xs uppercase tracking-wide text-slate-500">{t("Lesson Type")}</p>
               <p className="mt-1 text-sm font-semibold text-slate-800">{selectedLesson.lesson_type}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Module</p>
+              <p className="text-xs uppercase tracking-wide text-slate-500">{t("Module")}</p>
               <p className="mt-1 text-sm font-semibold text-slate-800">{selectedLesson.module_title}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Content Lines</p>
+              <p className="text-xs uppercase tracking-wide text-slate-500">{t("Content Lines")}</p>
               <p className="mt-1 text-sm font-semibold text-slate-800">{lessonSections.length}</p>
             </div>
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs uppercase tracking-wide text-slate-500">Progress</p>
+              <p className="text-xs uppercase tracking-wide text-slate-500">{t("Progress")}</p>
               <p className="mt-1 text-sm font-semibold text-slate-800">
-                {isCompleted ? "Completed" : currentProgress?.status === "in_progress" ? "In progress" : "Not started"}
+                {isCompleted ? t("Completed") : currentProgress?.status === "in_progress" ? t("In progress") : t("Not started")}
               </p>
             </div>
           </div>
@@ -209,7 +213,7 @@ export function StudentLessonPage() {
                 {line}
               </div>
             ))}
-            <p className="text-xs adapted-muted">Choose your answers and discuss them with your teacher.</p>
+            <p className="text-xs adapted-muted">{t("Choose your answers and discuss them with your teacher.")}</p>
           </div>
         ) : lessonSections.length > 0 ? (
           <div className="grid gap-2 text-sm leading-relaxed">
@@ -237,7 +241,7 @@ export function StudentLessonPage() {
             })}
           </div>
         ) : (
-          <p className="text-sm leading-relaxed adapted-muted">Practice key phrases and complete speaking prompts with guided feedback.</p>
+          <p className="text-sm leading-relaxed adapted-muted">{t("Practice key phrases and complete speaking prompts with guided feedback.")}</p>
         )}
         <div className="mt-5 flex gap-2">
           <Button
@@ -251,13 +255,13 @@ export function StudentLessonPage() {
               });
             }}
           >
-            {isCompleted ? "Completed" : updateProgressMutation.isPending ? "Saving..." : "Mark as Complete"}
+            {isCompleted ? t("Completed") : updateProgressMutation.isPending ? t("Saving...") : t("Mark as Complete")}
           </Button>
-          <Button variant="secondary">Save Draft</Button>
+          <Button variant="secondary">{t("Save Draft")}</Button>
         </div>
-        {updateProgressMutation.isError ? <p className="mt-3 text-sm text-[var(--danger)]">Could not update lesson progress.</p> : null}
+        {updateProgressMutation.isError ? <p className="mt-3 text-sm text-[var(--danger)]">{t("Could not update lesson progress.")}</p> : null}
         {updateProgressMutation.isSuccess || isCompleted ? (
-          <p className="mt-3 text-sm text-emerald-700">Lesson marked as completed.</p>
+          <p className="mt-3 text-sm text-emerald-700">{t("Lesson marked as completed.")}</p>
         ) : null}
       </Card>
     </div>
@@ -265,6 +269,7 @@ export function StudentLessonPage() {
 }
 
 export function StudentProgressPage() {
+  const { t } = useI18n();
   const progressQuery = useStudentProgress();
   const completed = (progressQuery.data ?? []).filter((item) => item.status === "completed").length;
   const total = progressQuery.data?.length ?? 0;
@@ -278,8 +283,8 @@ export function StudentProgressPage() {
           <ProgressBar value={percent} />
         </Card>
         <Card title="Speaking Confidence" subtitle="Self + teacher evaluation trend">
-          <p className="text-3xl font-semibold">B1 trajectory</p>
-          <p className="mt-2 text-sm adapted-muted">Steady improvement in service-focused conversation tasks.</p>
+          <p className="text-3xl font-semibold">{t("B1 trajectory")}</p>
+          <p className="mt-2 text-sm adapted-muted">{t("Steady improvement in service-focused conversation tasks.")}</p>
         </Card>
       </div>
     </div>
@@ -287,6 +292,7 @@ export function StudentProgressPage() {
 }
 
 export function StudentProfilePage() {
+  const { t } = useI18n();
   const user = useAuthStore((state) => state.user);
   const initials =
     user?.full_name
@@ -301,26 +307,26 @@ export function StudentProfilePage() {
       <PageHeader title="Profile" description="Your personal workspace details." />
       <div className="mx-auto max-w-2xl">
         <Card className="overflow-hidden p-0">
-          <div className="h-28 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700" />
+          <div className="h-28 bg-[var(--primary)]" />
           <div className="px-5 pb-5">
             <div className="-mt-10 inline-flex h-20 w-20 items-center justify-center rounded-2xl border-4 border-white bg-slate-100 text-2xl font-semibold text-slate-700 shadow-sm">
               {initials}
             </div>
 
             <div className="mt-3">
-              <p className="text-xl font-semibold tracking-tight text-slate-900">{user?.full_name || "Student"}</p>
-              <p className="text-sm adapted-muted">{user?.role ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : "Student"}</p>
+              <p className="text-xl font-semibold tracking-tight text-slate-900">{user?.full_name || t("Student")}</p>
+              <p className="text-sm adapted-muted">{user?.role ? `${user.role[0].toUpperCase()}${user.role.slice(1)}` : t("Student")}</p>
             </div>
 
             <div className="mt-5 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
               <div className="flex items-center justify-between gap-3">
-                <span className="adapted-muted">Email</span>
+                <span className="adapted-muted">{t("Email")}</span>
                 <span className="font-medium text-slate-800">{user?.email || "-"}</span>
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span className="adapted-muted">Status</span>
+                <span className="adapted-muted">{t("Status")}</span>
                 <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-                  {user?.is_active === false ? "Inactive" : "Active"}
+                  {user?.is_active === false ? t("Inactive") : t("Active")}
                 </span>
               </div>
             </div>
@@ -332,6 +338,7 @@ export function StudentProfilePage() {
 }
 
 export function StudentGenerateQuizPage() {
+  const { t } = useI18n();
   const [topic, setTopic] = useState("Front desk communication");
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [lastScore, setLastScore] = useState<{ correct: number; total: number } | null>(null);
@@ -376,7 +383,7 @@ export function StudentGenerateQuizPage() {
 
       <Card title="Quiz Generator" subtitle="AI-generated MCQ for your workplace English topic.">
         <div className="grid gap-3">
-          <Input label="Topic" value={topic} onChange={(event) => setTopic(event.target.value)} />
+          <Input label={t("Topic")} value={topic} onChange={(event) => setTopic(event.target.value)} />
           {!profileStatus.data?.onboarding_completed ? (
             <Button
               variant="secondary"
@@ -389,7 +396,7 @@ export function StudentGenerateQuizPage() {
                 });
               }}
             >
-              {onboardingMutation.isPending ? "Enabling..." : "Enable AI Tools"}
+              {onboardingMutation.isPending ? t("Enabling...") : t("Enable AI Tools")}
             </Button>
           ) : null}
           <Button
@@ -400,17 +407,17 @@ export function StudentGenerateQuizPage() {
               quizMutation.mutate({ topic, question_count: 5 });
             }}
           >
-            {quizMutation.isPending ? "Generating..." : "Generate AI Quiz"}
+            {quizMutation.isPending ? t("Generating...") : t("Generate AI Quiz")}
           </Button>
           {!profileStatus.data?.onboarding_completed ? (
-            <p className="text-sm adapted-muted">Enable AI tools once to start generating quizzes.</p>
+            <p className="text-sm adapted-muted">{t("Enable AI tools once to start generating quizzes.")}</p>
           ) : null}
-          {onboardingMutation.error ? <p className="text-sm text-[var(--danger)]">Failed to enable AI tools.</p> : null}
-          {quizMutation.error ? <p className="text-sm text-[var(--danger)]">Could not generate quiz now. Try again.</p> : null}
+          {onboardingMutation.error ? <p className="text-sm text-[var(--danger)]">{t("Failed to enable AI tools.")}</p> : null}
+          {quizMutation.error ? <p className="text-sm text-[var(--danger)]">{t("Could not generate quiz now. Try again.")}</p> : null}
           <div className="rounded-xl bg-slate-100 p-3 text-sm">
-            <p className="font-medium">Solved analytics</p>
-            <p className="adapted-muted">Quizzes solved: {solvedQuizzes}</p>
-            <p className="adapted-muted">Questions solved: {solvedQuestions}</p>
+            <p className="font-medium">{t("Solved analytics")}</p>
+            <p className="adapted-muted">{t("Quizzes solved").replace("{count}", String(solvedQuizzes))}</p>
+            <p className="adapted-muted">{t("Questions solved").replace("{count}", String(solvedQuestions))}</p>
           </div>
         </div>
       </Card>
@@ -439,19 +446,19 @@ export function StudentGenerateQuizPage() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-3 text-xs adapted-muted">Hint: {question.explanation}</p>
+              <p className="mt-3 text-xs adapted-muted">{t("Hint")}: {question.explanation}</p>
             </Card>
           ))}
           <div className="flex flex-wrap gap-2">
-            <Button onClick={submitQuizAttempt}>Submit Quiz</Button>
+            <Button onClick={submitQuizAttempt}>{t("Submit Quiz")}</Button>
             <Button variant="secondary" leftIcon={<RotateCcw size={14} />} onClick={() => setSelectedAnswers({})}>
-              Reset Answers
+              {t("Reset Answers")}
             </Button>
           </div>
           {lastScore ? (
             <Card title="Last Result">
               <p className="text-sm adapted-muted">
-                You solved {lastScore.correct} out of {lastScore.total} questions.
+                {t("You solved quiz summary").replace("{correct}", String(lastScore.correct)).replace("{total}", String(lastScore.total))}
               </p>
               <ProgressBar value={(lastScore.correct / lastScore.total) * 100} className="mt-3" />
             </Card>
@@ -463,6 +470,7 @@ export function StudentGenerateQuizPage() {
 }
 
 export function StudentPronunciationPracticePage() {
+  const { t } = useI18n();
   const [isRecording, setIsRecording] = useState(false);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
   const [activeAudio, setActiveAudio] = useState<"reference" | "feedback" | null>(null);
@@ -585,7 +593,7 @@ export function StudentPronunciationPracticePage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title="Practice" subtitle="Listen, record, and submit for scoring.">
           <div className="grid gap-3">
-            <p className="text-sm adapted-muted">Reference: {pronunciationSession.data?.reference_text ?? "Loading phrase..."}</p>
+            <p className="text-sm adapted-muted">{t("Reference")}: {pronunciationSession.data?.reference_text ?? t("Loading phrase...")}</p>
             <div className="flex flex-wrap gap-2">
               <Button
                 variant="secondary"
@@ -593,7 +601,7 @@ export function StudentPronunciationPracticePage() {
                 disabled={!pronunciationSession.data?.reference_audio_base64}
                 onClick={() => playBase64Audio(pronunciationSession.data?.reference_audio_base64, "reference")}
               >
-                {activeAudio === "reference" ? "Stop Reference" : "Play Reference"}
+                {activeAudio === "reference" ? t("Stop Reference") : t("Play Reference")}
               </Button>
               <Button
                 variant="secondary"
@@ -606,10 +614,10 @@ export function StudentPronunciationPracticePage() {
                   await pronunciationSession.refetch();
                 }}
               >
-                {pronunciationSession.isFetching ? "Loading..." : "New Phrase"}
+                {pronunciationSession.isFetching ? t("Loading...") : t("New Phrase")}
               </Button>
               <Button leftIcon={<Mic size={14} />} onClick={toggleRecording}>
-                {isRecording ? "Stop Recording" : "Start Recording"}
+                {isRecording ? t("Stop Recording") : t("Start Recording")}
               </Button>
             </div>
             <Button
@@ -624,7 +632,7 @@ export function StudentPronunciationPracticePage() {
                 });
               }}
             >
-              {pronunciationMutation.isPending ? "Assessing..." : "Check Pronunciation"}
+              {pronunciationMutation.isPending ? t("Assessing...") : t("Check Pronunciation")}
             </Button>
           </div>
         </Card>
@@ -632,13 +640,13 @@ export function StudentPronunciationPracticePage() {
         <Card title="Result">
           {pronunciationMutation.data ? (
             <div className="grid gap-2 text-sm">
-              <p className="adapted-muted">Recognized text: {stripAiTags(pronunciationMutation.data.recognized_text) || "-"}</p>
-              <p className="adapted-muted">Accuracy: {pronunciationMutation.data.scores.accuracy_score ?? "-"}</p>
-              <p className="adapted-muted">Fluency: {pronunciationMutation.data.scores.fluency_score ?? "-"}</p>
-              <p className="adapted-muted">Completeness: {pronunciationMutation.data.scores.completeness_score ?? "-"}</p>
-              <p className="adapted-muted">Overall: {pronunciationMutation.data.scores.pronunciation_score ?? "-"}</p>
+              <p className="adapted-muted">{t("Recognized text")}: {stripAiTags(pronunciationMutation.data.recognized_text) || "-"}</p>
+              <p className="adapted-muted">{t("Accuracy")}: {pronunciationMutation.data.scores.accuracy_score ?? "-"}</p>
+              <p className="adapted-muted">{t("Fluency")}: {pronunciationMutation.data.scores.fluency_score ?? "-"}</p>
+              <p className="adapted-muted">{t("Completeness")}: {pronunciationMutation.data.scores.completeness_score ?? "-"}</p>
+              <p className="adapted-muted">{t("Overall")}: {pronunciationMutation.data.scores.pronunciation_score ?? "-"}</p>
               <p className="adapted-muted">
-                Feedback: {stripAiTags(pronunciationMutation.data.feedback_text) || pronunciationMutation.data.error_message || "-"}
+                {t("Feedback")}: {stripAiTags(pronunciationMutation.data.feedback_text) || pronunciationMutation.data.error_message || "-"}
               </p>
               <div>
                 <Button
@@ -648,16 +656,16 @@ export function StudentPronunciationPracticePage() {
                   disabled={!pronunciationMutation.data.feedback_audio_base64}
                   onClick={() => playBase64Audio(pronunciationMutation.data?.feedback_audio_base64, "feedback")}
                 >
-                  {activeAudio === "feedback" ? "Stop Feedback Audio" : "Play Feedback Audio"}
+                  {activeAudio === "feedback" ? t("Stop Feedback Audio") : t("Play Feedback Audio")}
                 </Button>
               </div>
             </div>
           ) : (
-            <p className="text-sm adapted-muted">No pronunciation assessment yet.</p>
+            <p className="text-sm adapted-muted">{t("No pronunciation assessment yet.")}</p>
           )}
           {pronunciationMutation.error ? (
             <p className="text-sm text-[var(--danger)]">
-              Pronunciation check failed: {pronunciationErrorMessage}
+              {t("Pronunciation check failed")}: {pronunciationErrorMessage}
             </p>
           ) : null}
         </Card>

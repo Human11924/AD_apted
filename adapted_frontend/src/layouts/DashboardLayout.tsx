@@ -3,6 +3,8 @@ import { useMemo, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 
 import { Button } from "@/components/ui/Button";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
+import { useI18n } from "@/i18n/I18nProvider";
 import { useAuthStore } from "@/store/authStore";
 import type { Role } from "@/types/auth";
 
@@ -51,6 +53,7 @@ export function DashboardLayout() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { user, logout } = useAuthStore();
+  const { t } = useI18n();
 
   const nav = useMemo(() => roleNavigation[user?.role ?? "student"], [user?.role]);
 
@@ -78,13 +81,14 @@ export function DashboardLayout() {
               <Menu size={18} />
             </button>
             <img src="/logo.svg" alt="AdaptEd" className="h-9 w-auto" />
-            <p className="text-sm font-medium adapted-muted">AdaptEd Workspace</p>
+            <p className="text-sm font-medium adapted-muted">{t("AdaptEd Workspace")}</p>
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <span className="hidden text-sm adapted-muted sm:inline">{user?.full_name}</span>
             <Button variant="ghost" size="sm" onClick={logout} leftIcon={<LogOut size={14} />}>
-              Logout
+              {t("Logout")}
             </Button>
           </div>
         </header>
@@ -104,7 +108,7 @@ export function DashboardLayout() {
                       : "bg-slate-100 text-[var(--muted)] hover:bg-slate-200"
                   }`}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </NavLink>
               );
             })}
@@ -120,6 +124,8 @@ export function DashboardLayout() {
 }
 
 function SidebarContent({ nav, pathname, close }: { nav: NavItem[]; pathname: string; close: () => void }) {
+  const { t } = useI18n();
+
   return (
     <div className="flex h-full flex-col gap-5">
       <Link to="/" className="inline-flex items-center">
@@ -137,7 +143,7 @@ function SidebarContent({ nav, pathname, close }: { nav: NavItem[]; pathname: st
                 active ? "bg-blue-50 text-[var(--primary)]" : "text-[var(--muted)] hover:bg-slate-100"
               }`}
             >
-              {item.label}
+              {t(item.label)}
             </NavLink>
           );
         })}
