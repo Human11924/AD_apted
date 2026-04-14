@@ -1,0 +1,210 @@
+.pricing {
+  padding: 2.5rem 0 4rem;
+}
+
+.pricingMain__head {
+  text-align: center;
+}
+
+.pricingMain__title {
+  margin: 0;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.1;
+  color: #30231c;
+  font-family: var(--font-brand);
+}
+
+.pricingMain__accent {
+  color: var(--primary-strong);
+}
+
+.pricingMain__subtitle {
+  margin: 1rem auto 0;
+  max-width: 46rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.pricingPlans {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.planCard {
+  background: #fffdfa;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  padding: 1.25rem;
+  color: #362820;
+  display: flex;
+  flex-direction: column;
+}
+
+.planCard--dark {
+  background: linear-gradient(130deg, #2c1f18, #1e1510 45%, #3a271d);
+  border-color: #6a4a2d;
+  color: #f7eadc;
+}
+
+.planCard__kicker {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.planCard__sub {
+  margin-top: 0.35rem;
+  color: var(--muted);
+}
+
+.planCard--dark .planCard__sub {
+  color: #d9c7b7;
+}
+
+.planCard__priceRow {
+  margin-top: 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.planCard__price {
+  font-size: 2.2rem;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--primary-strong);
+}
+
+.planCard--dark .planCard__price {
+  color: var(--primary);
+}
+
+.planCard__per {
+  color: var(--muted);
+}
+
+.planCard--dark .planCard__per {
+  color: #d7c5b6;
+}
+
+.planCard__list {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+  flex-grow: 1;
+}
+
+.planCard__li {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.planCard__check {
+  width: 1rem;
+  height: 1rem;
+  color: var(--primary-strong);
+  flex-shrink: 0;
+}
+
+.planCard--dark .planCard__check {
+  color: var(--primary);
+}
+
+.planCard__btn {
+  margin-top: 1.2rem;
+  min-height: 2.7rem;
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: #2f220e;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.planCard__btn:hover {
+  background: var(--primary-strong);
+}
+
+.planCard--dark .planCard__btn {
+  background: transparent;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.planCard--dark .planCard__btn:hover {
+  background: rgba(243, 190, 41, 0.1);
+}
+
+.pricingFaq {
+  margin-top: 2.3rem;
+}
+
+.pricingFaq__title {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.5rem, 3.6vw, 2.2rem);
+  color: #34271f;
+  font-family: var(--font-brand);
+}
+
+.pricingFaq__grid {
+  margin-top: 1.15rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.faqItem {
+  background: #fffdfa;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  padding: 1rem;
+}
+
+.faqItem__qRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.faqItem__badge {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: #2f220e;
+  font-weight: 700;
+}
+
+.faqItem__q {
+  font-weight: 700;
+  color: #32261e;
+}
+
+.faqItem__a {
+  margin-top: 0.6rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+@media (min-width: 860px) {
+  .pricingPlans {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pricingFaq__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
