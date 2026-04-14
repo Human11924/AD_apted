@@ -102,6 +102,7 @@ export function StudentLessonPage() {
   const isCompleted = currentProgress?.status === "completed";
   const lessonContent = selectedLesson?.lesson_content?.trim();
   const lessonSections = lessonContent ? lessonContent.split("\n").map((line) => line.trim()).filter(Boolean) : [];
+  const detailHighlights = lessonSections.filter((line) => /^(goal|scenario|framework|your task|practice):/i.test(line));
   const dialogueLines = lessonSections.filter((line) => line.includes(":"));
   const quizLines = lessonSections.filter((line) => /^quiz\s*\d+:/i.test(line) || /^[ABC]\)/.test(line));
   const courseLessons = selectedLesson
@@ -146,6 +147,46 @@ export function StudentLessonPage() {
           </div>
         ) : null}
 
+        {selectedLesson ? (
+          <div className="mb-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs uppercase tracking-wide text-slate-500">Lesson Type</p>
+              <p className="mt-1 text-sm font-semibold text-slate-800">{selectedLesson.lesson_type}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs uppercase tracking-wide text-slate-500">Module</p>
+              <p className="mt-1 text-sm font-semibold text-slate-800">{selectedLesson.module_title}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs uppercase tracking-wide text-slate-500">Content Lines</p>
+              <p className="mt-1 text-sm font-semibold text-slate-800">{lessonSections.length}</p>
+            </div>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+              <p className="text-xs uppercase tracking-wide text-slate-500">Progress</p>
+              <p className="mt-1 text-sm font-semibold text-slate-800">
+                {isCompleted ? "Completed" : currentProgress?.status === "in_progress" ? "In progress" : "Not started"}
+              </p>
+            </div>
+          </div>
+        ) : null}
+
+        {detailHighlights.length > 0 ? (
+          <div className="mb-4 grid gap-2">
+            {detailHighlights.map((line, index) => {
+              const separatorIndex = line.indexOf(":");
+              const label = line.slice(0, separatorIndex).trim();
+              const value = line.slice(separatorIndex + 1).trim();
+
+              return (
+                <div key={index} className="rounded-xl border border-blue-100 bg-blue-50/60 p-3 text-sm">
+                  <p className="font-semibold text-blue-800">{label}</p>
+                  <p className="mt-1 text-blue-900/80">{value}</p>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
+
         {selectedLesson?.lesson_type === "dialogue" && dialogueLines.length > 0 ? (
           <div className="grid gap-2">
             {dialogueLines.map((line, index) => {
@@ -171,10 +212,29 @@ export function StudentLessonPage() {
             <p className="text-xs adapted-muted">Choose your answers and discuss them with your teacher.</p>
           </div>
         ) : lessonSections.length > 0 ? (
-          <div className="grid gap-2 text-sm leading-relaxed adapted-muted">
-            {lessonSections.map((section, index) => (
-              <p key={index}>{section}</p>
-            ))}
+          <div className="grid gap-2 text-sm leading-relaxed">
+            {lessonSections.map((section, index) => {
+              const splitIndex = section.indexOf(":");
+              const hasLabel = splitIndex > -1;
+
+              if (!hasLabel) {
+                return (
+                  <div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-3 adapted-muted">
+                    {section}
+                  </div>
+                );
+              }
+
+              const label = section.slice(0, splitIndex).trim();
+              const value = section.slice(splitIndex + 1).trim();
+
+              return (
+                <div key={index} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <p className="font-medium text-slate-800">{label}</p>
+                  <p className="mt-1 adapted-muted">{value}</p>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <p className="text-sm leading-relaxed adapted-muted">Practice key phrases and complete speaking prompts with guided feedback.</p>
