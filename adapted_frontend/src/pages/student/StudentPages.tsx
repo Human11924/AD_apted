@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mic, Play, RotateCcw } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
@@ -405,16 +405,58 @@ export function StudentGenerateQuizPage() {
 export function StudentPronunciationPracticePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
+  const [activeAudio, setActiveAudio] = useState<"reference" | "feedback" | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
   const pronunciationSession = usePronunciationSession();
   const pronunciationMutation = useAssessPronunciation();
   const pronunciationErrorMessage = getMutationErrorMessage(pronunciationMutation.error);
 
-  const playBase64Audio = (base64: string | null | undefined) => {
+  const stopAudio = () => {
+    if (!audioPlayerRef.current) return;
+    audioPlayerRef.current.pause();
+    audioPlayerRef.current.currentTime = 0;
+    audioPlayerRef.current = null;
+    setActiveAudio(null);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
+    };
+  }, []);
+
+  const playBase64Audio = (base64: string | null | undefined, type: "reference" | "feedback") => {
     if (!base64) return;
+
+    if (activeAudio === type) {
+      stopAudio();
+      return;
+    }
+
+    stopAudio();
+
     const audio = new Audio(`data:audio/wav;base64,${base64}`);
-    void audio.play();
+    audioPlayerRef.current = audio;
+    setActiveAudio(type);
+
+    audio.onended = () => {
+      if (audioPlayerRef.current === audio) {
+        audioPlayerRef.current = null;
+        setActiveAudio(null);
+      }
+    };
+
+    void audio.play().catch(() => {
+      if (audioPlayerRef.current === audio) {
+        audioPlayerRef.current = null;
+        setActiveAudio(null);
+      }
+    });
   };
 
   const saveWavAsBase64 = async (blob: Blob): Promise<string> => {
@@ -431,6 +473,8 @@ export function StudentPronunciationPracticePage() {
   };
 
   const startRecording = async () => {
+    stopAudio();
+
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     streamRef.current = stream;
     const recorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
@@ -487,15 +531,16 @@ export function StudentPronunciationPracticePage() {
                 variant="secondary"
                 leftIcon={<Play size={14} />}
                 disabled={!pronunciationSession.data?.reference_audio_base64}
-                onClick={() => playBase64Audio(pronunciationSession.data?.reference_audio_base64)}
+                onClick={() => playBase64Audio(pronunciationSession.data?.reference_audio_base64, "reference")}
               >
-                Play Reference
+                {activeAudio === "reference" ? "Stop Reference" : "Play Reference"}
               </Button>
               <Button
                 variant="secondary"
                 leftIcon={<RotateCcw size={14} />}
                 disabled={pronunciationSession.isFetching}
                 onClick={async () => {
+                  stopAudio();
                   setAudioBase64(null);
                   pronunciationMutation.reset();
                   await pronunciationSession.refetch();
@@ -510,6 +555,7 @@ export function StudentPronunciationPracticePage() {
             <Button
               disabled={!audioBase64 || !pronunciationSession.data?.reference_text || pronunciationMutation.isPending}
               onClick={() => {
+                if (pronunciationMutation.isPending) return;
                 if (!audioBase64 || !pronunciationSession.data?.reference_text) return;
                 pronunciationMutation.mutate({
                   reference_text: pronunciationSession.data.reference_text,
@@ -540,9 +586,9 @@ export function StudentPronunciationPracticePage() {
                   size="sm"
                   leftIcon={<Play size={14} />}
                   disabled={!pronunciationMutation.data.feedback_audio_base64}
-                  onClick={() => playBase64Audio(pronunciationMutation.data?.feedback_audio_base64)}
+                  onClick={() => playBase64Audio(pronunciationMutation.data?.feedback_audio_base64, "feedback")}
                 >
-                  Play Feedback Audio
+                  {activeAudio === "feedback" ? "Stop Feedback Audio" : "Play Feedback Audio"}
                 </Button>
               </div>
             </div>

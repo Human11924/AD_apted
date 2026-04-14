@@ -247,8 +247,8 @@ export function EmployerSettingsPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title="General">
           <div className="grid gap-2 text-sm adapted-muted">
-            <p>Company: Blue Harbor Hotels</p>
-            <p>Primary contact: ops@blueharbor.com</p>
+            <p>Company: Current Employer Organization</p>
+            <p>Primary contact: operations@company.com</p>
             <p>Default language level: A2-B1</p>
           </div>
         </Card>

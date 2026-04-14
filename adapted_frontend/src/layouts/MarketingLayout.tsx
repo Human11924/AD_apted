@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Link, NavLink, Outlet } from "react-router-dom";
-import { Instagram, Mail, Phone } from "lucide-react";
+import { Instagram, Mail, Menu, Phone, X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,8 @@ const nav = [
 ];
 
 export function MarketingLayout() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 border-b border-[var(--line)] bg-[var(--panel)]/95 backdrop-blur-lg">
@@ -35,6 +38,15 @@ export function MarketingLayout() {
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="inline-flex rounded-full p-2 text-[var(--accent)] transition hover:bg-[#fff3d6] md:hidden"
+              onClick={() => setMobileOpen((prev) => !prev)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
             <Link
               to="/login"
               className="hidden rounded-full px-3 py-1.5 text-sm font-medium text-[var(--accent)] transition duration-200 hover:border hover:border-[#e8cb86] hover:bg-[#fff3d6] hover:text-[#6c4a10] md:inline-block"
@@ -46,6 +58,42 @@ export function MarketingLayout() {
             </Link>
           </div>
         </div>
+
+        {mobileOpen ? (
+          <div className="border-t border-[var(--line)] bg-[var(--panel)] md:hidden">
+            <nav className="adapted-container grid gap-2 py-3 text-sm text-[var(--accent)]">
+              {nav.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    cn(
+                      "rounded-xl px-3 py-2 transition duration-200 hover:border hover:border-[#e8cb86] hover:bg-[#fff3d6] hover:text-[#6c4a10]",
+                      isActive && "border border-[#e8cb86] bg-[#fff3d6] text-[#6c4a10]",
+                    )
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+              <div className="mt-1 grid grid-cols-2 gap-2">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center justify-center rounded-xl border border-[#e8cb86] px-3 py-2 text-sm font-medium text-[#6c4a10]"
+                >
+                  Log in
+                </Link>
+                <Link to="/register-by-code" onClick={() => setMobileOpen(false)}>
+                  <Button size="sm" className="w-full">
+                    Join
+                  </Button>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        ) : null}
       </header>
 
       <main className="fade-up">
