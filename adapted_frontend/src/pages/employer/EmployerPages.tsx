@@ -65,7 +65,9 @@ export function EmployerDashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.isLoading
           ? Array.from({ length: 4 }).map((_, index) => <Skeleton key={index} className="h-32" />)
-          : metrics.data?.map((metric, index) => (
+          : metrics.isError
+            ? <p className="text-sm adapted-muted">Failed to load dashboard metrics.</p>
+            : metrics.data?.map((metric, index) => (
               <StatCard
                 key={metric.title}
                 title={metric.title}
@@ -81,6 +83,8 @@ export function EmployerDashboardPage() {
           <div className="grid gap-4">
             {cohortPerformance.isLoading ? (
               Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="h-12" />)
+            ) : cohortPerformance.isError ? (
+              <p className="text-sm adapted-muted">Failed to load cohort performance.</p>
             ) : cohortPerformance.data && cohortPerformance.data.length > 0 ? (
               cohortPerformance.data.map((cohort) => (
                 <div key={cohort.id}>

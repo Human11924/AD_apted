@@ -69,9 +69,21 @@ interface EmployerCourseGroupProgressItemResponse {
 async function withMock<T>(fallback: T, request: () => Promise<T>): Promise<T> {
   try {
     return await request();
-  } catch {
-    return fallback;
+  } catch (error) {
+    if (!import.meta.env.PROD) {
+      return fallback;
+    }
+
+    throw error;
   }
+}
+
+function buildCohortMockFallback(): CohortPerformanceRecord[] {
+  return employerGroups.map((group, index) => ({
+    id: group.id,
+    name: group.name,
+    completionPercent: [71, 64, 83][index] ?? 0,
+  }));
 }
 
 export const dashboardService = {
@@ -136,37 +148,30 @@ export const dashboardService = {
   },
 
   async getEmployerCohortPerformance(): Promise<CohortPerformanceRecord[]> {
-    return withMock(
-      employerGroups.map((group, index) => ({
-        id: group.id,
-        name: group.name,
-        completionPercent: [71, 64, 83][index] ?? 0,
-      })),
-      async () => {
-        const { data: groups } = await apiClient.get<CourseGroupResponse[]>("/course-groups/me");
+    return withMock(buildCohortMockFallback(), async () => {
+      const { data: groups } = await apiClient.get<CourseGroupResponse[]>("/course-groups/me");
 
-        const progressRows = await Promise.all(
-          groups.map(async (group) => {
-            const { data } = await apiClient.get<EmployerCourseGroupProgressItemResponse[]>(
-              `/employer/course-groups/${group.id}/progress`,
-            );
+      const progressRows = await Promise.all(
+        groups.map(async (group) => {
+          const { data } = await apiClient.get<EmployerCourseGroupProgressItemResponse[]>(
+            `/employer/course-groups/${group.id}/progress`,
+          );
 
-            const completionPercent =
-              data.length > 0
-                ? Math.round(data.reduce((sum, item) => sum + item.progress_percent, 0) / data.length)
-                : 0;
+          const completionPercent =
+            data.length > 0
+              ? Math.round(data.reduce((sum, item) => sum + item.progress_percent, 0) / data.length)
+              : 0;
 
-            return {
-              id: `G-${group.id}`,
-              name: group.name,
-              completionPercent,
-            };
-          }),
-        );
+          return {
+            id: `G-${group.id}`,
+            name: group.name,
+            completionPercent,
+          };
+        }),
+      );
 
-        return progressRows.sort((a, b) => b.completionPercent - a.completionPercent);
-      },
-    );
+      return progressRows.sort((a, b) => b.completionPercent - a.completionPercent);
+    });
   },
 
   async getAccessCodes(): Promise<AccessCodeRecord[]> {
