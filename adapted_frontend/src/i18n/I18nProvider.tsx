@@ -189,6 +189,8 @@ const ruDict: Record<string, string> = {
   "Offline event": "Офлайн-занятия",
   "Email support": "Поддержка по email",
   "Progress tracking & analytics": "Отслеживание прогресса и аналитика",
+  "Ai functions": "AI-функции",
+  "AI functions": "AI-функции",
   "Get Started": "Начать",
   "Offline Course": "Офлайн-курс",
   "Create a customized course": "Создание индивидуального курса",

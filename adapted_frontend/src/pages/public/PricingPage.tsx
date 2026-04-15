@@ -31,35 +31,6 @@ export function PricingPage() {
           </header>
 
           <div className="pricingPlans" role="list" aria-label="Plans">
-            <article className="planCard" role="listitem" aria-label="Online Course plan">
-              <div className="planCard__kicker">{t("Online Course")}</div>
-              <div className="planCard__sub">{t("Purchase a single ready-made course")}</div>
-
-              <div className="planCard__priceRow" aria-label="Price">
-                <div className="planCard__price">$15</div>
-                <div className="planCard__per">/pp, month</div>
-              </div>
-
-              <ul className="planCard__list" aria-label="Included features">
-                <li className="planCard__li">
-                  <IconCheck className="planCard__check" aria-hidden="true" />
-                  {t("Offline event")}
-                </li>
-                <li className="planCard__li">
-                  <IconCheck className="planCard__check" aria-hidden="true" />
-                  {t("Email support")}
-                </li>
-                <li className="planCard__li">
-                  <IconCheck className="planCard__check" aria-hidden="true" />
-                  {t("Progress tracking & analytics")}
-                </li>
-              </ul>
-
-              <Link className="planCard__btn" to="/contact">
-                {t("Get Started")}
-              </Link>
-            </article>
-
             <article className="planCard planCard--dark" role="listitem" aria-label="Offline Course plan">
               <div className="planCard__kicker">{t("Offline Course")}</div>
               <div className="planCard__sub">{t("Create a customized course")}</div>
@@ -85,6 +56,35 @@ export function PricingPage() {
                 <li className="planCard__li">
                   <IconCheck className="planCard__check" aria-hidden="true" />
                   {t("Progress tracking & analytics")}
+                </li>
+              </ul>
+
+              <Link className="planCard__btn" to="/contact">
+                {t("Get Started")}
+              </Link>
+            </article>
+
+            <article className="planCard" role="listitem" aria-label="Online Course plan">
+              <div className="planCard__kicker">{t("Online Course")}</div>
+              <div className="planCard__sub">{t("Purchase a single ready-made course")}</div>
+
+              <div className="planCard__priceRow" aria-label="Price">
+                <div className="planCard__price">$15</div>
+                <div className="planCard__per">/pp, month</div>
+              </div>
+
+              <ul className="planCard__list" aria-label="Included features">
+                <li className="planCard__li">
+                  <IconCheck className="planCard__check" aria-hidden="true" />
+                  {t("Email support")}
+                </li>
+                <li className="planCard__li">
+                  <IconCheck className="planCard__check" aria-hidden="true" />
+                  {t("Progress tracking & analytics")}
+                </li>
+                <li className="planCard__li">
+                  <IconCheck className="planCard__check" aria-hidden="true" />
+                  {t("AI functions")}
                 </li>
               </ul>
 
