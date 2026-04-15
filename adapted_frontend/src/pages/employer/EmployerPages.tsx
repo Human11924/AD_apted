@@ -9,7 +9,13 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StatCard } from "@/components/ui/StatCard";
-import { useAccessCodes, useEmployerGroups, useEmployerMetrics, useEmployerStudents } from "@/hooks/queries/useEmployerQueries";
+import {
+  useAccessCodes,
+  useEmployerCohortPerformance,
+  useEmployerGroups,
+  useEmployerMetrics,
+  useEmployerStudents,
+} from "@/hooks/queries/useEmployerQueries";
 import { useI18n } from "@/i18n/I18nProvider";
 
 function StatusBadge({ status }: { status: "active" | "at-risk" | "completed" }) {
@@ -23,6 +29,7 @@ function StatusBadge({ status }: { status: "active" | "at-risk" | "completed" })
 export function EmployerDashboardPage() {
   const { t } = useI18n();
   const metrics = useEmployerMetrics();
+  const cohortPerformance = useEmployerCohortPerformance();
 
   const metricIconByIndex = [
     <Wallet key="wallet" size={18} />,
@@ -72,12 +79,18 @@ export function EmployerDashboardPage() {
       <div className="mt-6 grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card title="Cohort Performance" subtitle="Completion trends by group launch cycle.">
           <div className="grid gap-4">
-            {[71, 64, 83].map((value, index) => (
-              <div key={index}>
-                <p className="mb-1 text-sm">{t("Cohort")} {index + 1}</p>
-                <ProgressBar value={value} />
-              </div>
-            ))}
+            {cohortPerformance.isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => <Skeleton key={index} className="h-12" />)
+            ) : cohortPerformance.data && cohortPerformance.data.length > 0 ? (
+              cohortPerformance.data.map((cohort) => (
+                <div key={cohort.id}>
+                  <p className="mb-1 text-sm">{cohort.name}</p>
+                  <ProgressBar value={cohort.completionPercent} />
+                </div>
+              ))
+            ) : (
+              <p className="text-sm adapted-muted">No cohorts yet.</p>
+            )}
           </div>
         </Card>
         <Card title="Insights" subtitle="Actionable focus areas for next sprint.">

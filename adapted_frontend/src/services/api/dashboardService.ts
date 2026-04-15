@@ -1,4 +1,4 @@
-import type { AccessCodeRecord, GroupRecord, MetricCard, StudentRecord } from "@/types/dashboard";
+import type { AccessCodeRecord, CohortPerformanceRecord, GroupRecord, MetricCard, StudentRecord } from "@/types/dashboard";
 
 import { apiClient } from "./client";
 import { accessCodes, employerGroups, employerMetrics, employerStudents } from "./mockData";
@@ -56,6 +56,14 @@ interface AccessCodeResponse {
   expires_at: string;
   is_active: boolean;
   used_by: string[];
+}
+
+interface EmployerCourseGroupProgressItemResponse {
+  student_id: number;
+  full_name: string;
+  lessons_completed: number;
+  total_lessons: number;
+  progress_percent: number;
 }
 
 async function withMock<T>(fallback: T, request: () => Promise<T>): Promise<T> {
@@ -125,6 +133,40 @@ export const dashboardService = {
         activeStudents: group.active_students,
       }));
     });
+  },
+
+  async getEmployerCohortPerformance(): Promise<CohortPerformanceRecord[]> {
+    return withMock(
+      employerGroups.map((group, index) => ({
+        id: group.id,
+        name: group.name,
+        completionPercent: [71, 64, 83][index] ?? 0,
+      })),
+      async () => {
+        const { data: groups } = await apiClient.get<CourseGroupResponse[]>("/course-groups/me");
+
+        const progressRows = await Promise.all(
+          groups.map(async (group) => {
+            const { data } = await apiClient.get<EmployerCourseGroupProgressItemResponse[]>(
+              `/employer/course-groups/${group.id}/progress`,
+            );
+
+            const completionPercent =
+              data.length > 0
+                ? Math.round(data.reduce((sum, item) => sum + item.progress_percent, 0) / data.length)
+                : 0;
+
+            return {
+              id: `G-${group.id}`,
+              name: group.name,
+              completionPercent,
+            };
+          }),
+        );
+
+        return progressRows.sort((a, b) => b.completionPercent - a.completionPercent);
+      },
+    );
   },
 
   async getAccessCodes(): Promise<AccessCodeRecord[]> {

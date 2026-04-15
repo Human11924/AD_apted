@@ -22,6 +22,12 @@ export interface GroupRecord {
   activeStudents: number;
 }
 
+export interface CohortPerformanceRecord {
+  id: string;
+  name: string;
+  completionPercent: number;
+}
+
 export interface AccessCodeRecord {
   id?: number;
   code: string;

@@ -20,6 +20,12 @@ export const useEmployerGroups = () =>
     queryFn: dashboardService.getEmployerGroups,
   });
 
+export const useEmployerCohortPerformance = () =>
+  useQuery({
+    queryKey: ["employer", "cohort-performance"],
+    queryFn: dashboardService.getEmployerCohortPerformance,
+  });
+
 export const useAccessCodes = () =>
   useQuery({
     queryKey: ["employer", "access-codes"],
