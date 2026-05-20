@@ -59,7 +59,6 @@ export function EmployerDashboardPage() {
       <PageHeader
         title="Overview"
         description="Monitor seats, cohorts, and learning outcomes across your company."
-        action={<Button leftIcon={<Download size={16} />}>{t("Export Report")}</Button>}
       />
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -133,7 +132,6 @@ export function EmployerStudentsPage() {
       <PageHeader
         title="Workers"
         description="Track learning health across departments and groups."
-        action={<Button leftIcon={<Plus size={16} />}>{t("Invite Worker")}</Button>}
       />
 
       <div className="mb-4 flex flex-wrap gap-3">
@@ -147,9 +145,6 @@ export function EmployerStudentsPage() {
             aria-label={t("Search workers")}
           />
         </label>
-        <Button variant="secondary" size="sm">
-          {t("Filter: All Departments")}
-        </Button>
       </div>
 
       {students.data ? (
@@ -239,7 +234,6 @@ export function EmployerAccessCodesPage() {
       <PageHeader
         title="Access Codes"
         description="Issue and track employee onboarding access codes."
-        action={<Button leftIcon={<Plus size={16} />}>{t("Generate Codes")}</Button>}
       />
       {codes.data ? (
         <DataTable
